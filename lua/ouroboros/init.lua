@@ -1,7 +1,7 @@
-local files = require("ouroboros.files");
+local files = require("ouroboros.files")
 
-local M = {};
+local M = {}
 
-M.list_files = files.list;
+M.list_files = files.list
 
-return M;
+return M
