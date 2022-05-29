@@ -1,13 +1,10 @@
 local M = {}
 
-function M.strip_extension(file)
- 
-end
-
 function M.split_filename(file)
     -- Returns the Path, Filename, and Extension as 3 values
     local path, filename, extension = string.match(file, "(.-)([^\\]-)([^\\%.]+)$")
-    filename = filename:sub(1,-2) -- pop the "." off the end of the filename
+    -- pop the "." off the end of the filename - wouldn't need if my regex were better
+    filename = filename:sub(1,-2)
     return path, filename, extension
 end
 

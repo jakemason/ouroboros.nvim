@@ -9,8 +9,8 @@ lua<<EOF
 require('plenary.reload').reload_module('ouroboros', true)
 EOF
 
-echo "Ouroboros loaded"
-
 lua ouroboros = require("ouroboros")
 
-command! -nargs=0 Ouroboros lua ouroboros.list_files()
+echo "Ouroboros loaded"
+
+command! -nargs=0 Ouroboros lua ouroboros.list()
