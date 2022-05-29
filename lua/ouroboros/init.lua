@@ -1,4 +1,4 @@
-local files = require("heads_and_tails.files");
+local files = require("ouroboros.files");
 
 local M = {};
 

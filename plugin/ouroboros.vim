@@ -6,4 +6,7 @@ let g:loaded_ouroboros = 1;
 
 echo "Loading my plugin"
 
-command! -nargs=0 Ouroboros lua require("ouroboros").list_files();
+lua ouroboros = require("ouroboros")
+
+
+command! -nargs=0 Ouroboros ouroboros.list_files();
