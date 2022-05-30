@@ -1,5 +1,15 @@
 local M = {}
 
+function M.log(v)
+    if vim.g.ouroboros_debug ~= 0 then
+        print(v)
+    end
+end
+
+function M.ternary(condition, T, F)
+    if condition then return T else return F end
+end
+
 function M.split_filename(file)
     -- Returns the Path, Filename, and Extension as 3 values
     local path, filename, extension = string.match(file, "(.-)([^\\]-)([^\\%.]+)$")
