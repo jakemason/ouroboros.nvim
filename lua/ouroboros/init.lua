@@ -3,12 +3,6 @@ local utils = require("ouroboros.utils")
 
 local M = {}
 
--- General Plan:
--- get current filename and extension
--- get all files under path that match that filename
--- open the filename with the opposite extension h <==> c, hpp <==> cpp
--- -- if more than one file has the same filename, present a list and let user pick?
-
 function M.list()
 
     local current_file = vim.api.nvim_eval('expand("%:p")')
@@ -31,7 +25,7 @@ function M.list()
 
     local next = next -- This is just an efficiency trick in Lua 
                       -- to quickly evaluate if a table is empty
-    -- if we found some results
+    -- if our results table isn't empty
     if next(matching_files) ~= nil then
         local desired_target = nil
 
@@ -42,7 +36,6 @@ function M.list()
         elseif(extension == "c" or extension == "h") then
             desired_target = utils.ternary(extension == "c", "h", "c") 
         end
-        -- TODO: Filter files based on extension
        
         utils.log("Looking for an extension of: " .. desired_target)
 
