@@ -1,0 +1,42 @@
+*ouroboros*    		   Switch between header and implementation files in C/C++
+
+Original Author:
+    Jake Mason <dev.jakemason@gmail.com>
+
+==============================================================================
+INTRODUCTION                                                 *ouroboros-intro*             
+
+ouroboros provides a means of quickly switching from a header file to the
+corresponding implementation file and vice versa. You can use the command
+`:Ouroboros` to switch the file in the active buffer.
+
+
+==============================================================================
+USAGE                                                        *ouroboros-usage*
+
+Switching between files is as easy as calling:
+>
+	:Ouroboros
+>
+
+I highly suggest binding this to allow quick switching at will:
+>
+	" Example keybinding:
+	noremap <leader>sw :Ouroboros<CR>
+>
+
+Note
+
+The `Ouroboros` command only works when called from a file ending in one of
+the following: `.cpp`,`.hpp`, `.h`, `.c`. Furthermore, ouroboros will respect
+your `.gitignore` file if one is present and ignore any possible matches that
+are also present in the `.gitignore` file.
+
+==============================================================================
+DEBUGGING                                                    *ouroboros-debug*
+
+You can set 'g:ouroboros_debug' to true to enable additional logging that will
+detail what the internals of ouroboros are doing while being run. This can 
+help diagnose results that aren't what you expect.
+
+ vim:tw=78:ts=8:noet:ft=help:norl:

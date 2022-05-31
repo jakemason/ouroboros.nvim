@@ -28,7 +28,7 @@ You can run `:checkhealth` to verify the plugin and dependencies are installed c
 
 ## Usage
 
-Bind the command `:Ouroboros` as needed, or bind it as desired:
+Invoke the command `:Ouroboros` as needed, or bind it as desired:
 
 ```viml
 " Example binding
