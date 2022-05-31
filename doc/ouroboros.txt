@@ -1,4 +1,4 @@
-*ouroboros*    		   Switch between header and implementation files in C/C++
+*ouroboros*    	       Switch between header and implementation files in C/C++
 
 Original Author:
     Jake Mason <dev.jakemason@gmail.com>
@@ -35,7 +35,7 @@ are also present in the `.gitignore` file.
 ==============================================================================
 DEBUGGING                                                    *ouroboros-debug*
 
-You can set 'g:ouroboros_debug' to true to enable additional logging that will
+You can set `g:ouroboros_debug` to true to enable additional logging that will
 detail what the internals of ouroboros are doing while being run. This can 
 help diagnose results that aren't what you expect.
 
