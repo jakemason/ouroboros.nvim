@@ -1,4 +1,4 @@
-# Ouroboros
+![Ouroboros](./repo/logo.png)
 
 A Neovim plugin that makes switching between header & implementation files in `C/C++` quick and painless.
 
