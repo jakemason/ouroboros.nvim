@@ -63,7 +63,7 @@ delayed (an entire _second or more_) _or_ I could switch from a header file to t
 but if I called `switchSourceHeader` again it would not switch back to the header. This was
 increasingly common if the folder structure of the project was several layers deep.
 
-I'd also tried [CurtineIncSw.vim]((ttps://github.com/ericcurtin/CurtineIncSw.vim) and had similar
+I'd also tried [CurtineIncSw.vim](https://github.com/ericcurtin/CurtineIncSw.vim) and had similar
 problems: failure to find corresponding files in larger projects, slow performance, etc.
 
 
