@@ -8,6 +8,11 @@ function M.list()
     local current_file = vim.api.nvim_eval('expand("%:p")')
     local path, filename, extension = utils.split_filename(current_file)
 
+    utils.log("Currently working with:")
+    utils.log("Full Path: " .. path)
+    utils.log("Filename: " .. filename)
+    utils.log("Extension: " .. extension)
+
     if((extension ~= "cpp") and (extension ~= "hpp") and
        (extension ~= "c") and (extension ~= "h")) then
            return

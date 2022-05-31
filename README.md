@@ -24,6 +24,8 @@ use {
 }
 ```
 
+You can run `:checkhealth` to verify the plugin and dependencies are installed correctly.
+
 ## Usage
 
 Bind the command `:Ouroboros` as needed, or bind it as desired:
@@ -31,6 +33,13 @@ Bind the command `:Ouroboros` as needed, or bind it as desired:
 ```viml
 " Example binding
 noremap <leader>sw :Ouroboros<CR>
+```
+
+If you'd like to open the result in a split, simply pipe `Ouroboros` to `vsplit` or `split`:
+
+```viml
+noremap <leader>sv :vsplit \| Ouroboros<CR> " open result in a vertical split
+noremap <leader>sh :split \| Ouroboros<CR>  " open result in a horizontal split
 ```
 
 *NOTE:* This command _does nothing_ unless used in a file ending in `.cpp`,`.hpp`,`.c` or `.h`.
@@ -55,16 +64,17 @@ match is found and allow the user to pick from the list.
 Put `let g:ouroboros_debug = 1` into your `init.vim` file to enable additional logging that will
 detail what Ouroboros is doing when running.
 
-### Why? There's several other options that do this!
+## Why use this plugin? There's several other options that do this!
 
 None of the alternatives worked well for me. I'd been using
 [coc-clangd](https://github.com/clangd/coc-clangd) most recently and wasn't pleased with the results
-that calling `:CocCommand clangd.switchSourceHeader` would return. Often the switch was noticeably
-delayed (an entire _second or more_) _or_ I could switch from a header file to the implementation,
-but if I called `switchSourceHeader` again it would not switch back to the header. This was
-increasingly common if the folder structure of the project was several layers deep.
+that calling `:CocCommand clangd.switchSourceHeader` would yield. Often the switch was noticeably
+delayed (1.0s or more) or I could switch from a header file to the implementation,
+but if I called `switchSourceHeader` again it would not switch back to the header, and vice versa.
+This was increasingly common if the folder structure of the project was several layers deep.
 
 I'd also tried [CurtineIncSw.vim](https://github.com/ericcurtin/CurtineIncSw.vim) and had similar
-problems: failure to find corresponding files in larger projects, slow performance, etc.
+problems: failure to find corresponding files in larger projects, slow performance, etc. Same thing
+with [a.vim](https://github.com/vim-scripts/a.vim), and `ctags` solutions as well.
 
-
+This solution is fast, doesn't require code analysis, and is easy to use.

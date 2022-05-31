@@ -1,6 +1,6 @@
-"if exists("g:loaded_ouroboros")
-"    finish
-"endif
+if exists("g:loaded_ouroboros")
+    finish
+endif
 let g:loaded_ouroboros = 1
 let g:ouroboros_debug = get(g:, 'ouroboros_debug', 0)
 
@@ -8,7 +8,8 @@ let g:ouroboros_debug = get(g:, 'ouroboros_debug', 0)
 " Helps development times tremendously
 
 lua<<EOF
-require('plenary.reload').reload_module('ouroboros', true)
+-- uncomment below to allow "source %" to reload the plugin during development
+-- require('plenary.reload').reload_module('ouroboros', true)
 EOF
 
 lua ouroboros = require("ouroboros")
