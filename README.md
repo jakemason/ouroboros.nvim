@@ -37,10 +37,11 @@ noremap <leader>sw :Ouroboros<CR>
 Invoking Ouroboros in a file with a different extension will do nothing.
 
 After the `Ouroboros` command is invoked, your working directory will be recursively searched until
-a file matching the _same name_ with the _counterpart_ extension is discovered. As such, I suggest
-working from the root of your project. Once that file is found, it will automatically be opened in
-the current buffer. If no corresponding file is found, a message will be logged to the messages
-buffer -- use `:messages` to review your recent messages.
+a file matching the _same name_ with the _counterpart_ extension is discovered. Note that the
+search also respects your `.gitignore` if one exists and any file ignored in `git` will be ignored
+in the results. As such, I suggest working from the root of your project. Once that file is found,
+it will automatically be opened in the current buffer. If no corresponding file is found, a message
+will be logged to the messages buffer -- use `:messages` to review your recent messages.
 
 ## Assumptions
 
