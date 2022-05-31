@@ -15,6 +15,7 @@ function M.list()
 
     if((extension ~= "cpp") and (extension ~= "hpp") and
        (extension ~= "c") and (extension ~= "h")) then
+        utils.log("Ouroboros doesn't work on a file ending in: " .. extension .. ". Aborting.")
            return
     end
 
