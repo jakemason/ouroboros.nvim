@@ -15,7 +15,7 @@ function M.list()
 
     if((extension ~= "cpp") and (extension ~= "hpp") and
        (extension ~= "c") and (extension ~= "h")) then
-        utils.log("Ouroboros doesn't work on a file ending in: " .. extension .. ". Aborting.")
+        utils.log("Ouroboros doesn't work on a file ending in: ." .. extension .. ". Aborting.")
            return
     end
 
@@ -33,22 +33,45 @@ function M.list()
                       -- to quickly evaluate if a table is empty
     -- if our results table isn't empty
     if next(matching_files) ~= nil then
-        local desired_target = nil
-
-        -- TODO: This only checks hpp <==> cpp and h <==> c, we conceivably want to
-        -- support cpp <==> h, hpp and h <==> cpp, c  etc, etc
+        local desired_extension = nil
+        
+        -- First pass searches for exactly hpp <==> cpp, h <==> c
         if(extension == "cpp" or extension == "hpp") then
-            desired_target = utils.ternary(extension == "cpp", "hpp", "cpp") 
+            desired_extension = utils.ternary(extension == "cpp", "hpp", "cpp") 
         elseif(extension == "c" or extension == "h") then
-            desired_target = utils.ternary(extension == "c", "h", "c") 
+            desired_extension = utils.ternary(extension == "c", "h", "c") 
         end
        
-        utils.log("Looking for an extension of: " .. desired_target)
+        utils.log("Looking for an extension of: " .. desired_extension)
 
         for index, value in ipairs(matching_files) do
-            local path, filename, extension = utils.split_filename(value)
+            local path, matched_filename, matched_extension = utils.split_filename(value)
+            utils.log("Potential match: " .. filename .. "." .. matched_extension)
+            if (matched_extension == desired_extension and matched_extension ~= extension) and
+                filename == matched_filename then
+                utils.log("Match found! Executing command: 'edit " .. matching_files[index] .."'")
+                local command_string = "edit " .. matching_files[index]
+                vim.cmd(command_string)
+                return
+            end
+        end
 
-            if extension == desired_target then
+        -- Second pass searches for h <==> cpp, c <==> hpp
+        utils.log("Failed to find a perfect matched_extension counterpart")
+        if(desired_extension == "cpp" or desired_extension == "hpp") then
+            desired_extension = utils.ternary(desired_extension == "cpp", "c", "h") 
+        elseif(desired_extension == "c" or desired_extension == "h") then
+            desired_extension = utils.ternary(desired_extension == "c", "cpp", "hpp") 
+        end
+
+        utils.log("Now searching for the less likely extension: ." .. desired_extension)
+
+        for index, value in ipairs(matching_files) do
+            local path, matched_filename, matched_extension = utils.split_filename(value)
+
+            utils.log("Potential match: " .. filename .. "." .. matched_extension)
+            if (matched_extension == desired_extension and matched_extension ~= extension) and
+                filename == matched_filename then
                 utils.log("Match found! Executing command: 'edit " .. matching_files[index] .."'")
                 local command_string = "edit " .. matching_files[index]
                 vim.cmd(command_string)
