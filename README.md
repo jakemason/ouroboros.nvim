@@ -26,6 +26,8 @@ use {
 
 You can run `:checkhealth` to verify the plugin and dependencies are installed correctly.
 
+You can get all of this information in the editor by running `:help ouroboros`.
+
 ## Usage
 
 Invoke the command `:Ouroboros` as needed, or bind it as desired:
