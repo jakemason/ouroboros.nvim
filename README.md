@@ -41,10 +41,8 @@ If you'd like to open the result in a split, simply pipe `Ouroboros` to `vsplit`
 
 ```viml
 
-autocmd! Filetype c,cpp noremap<buffer> <leader>sv :vsplit \| Ouroboros<CR> " open result in a 
-vertical split
-nautocmd! Filetype c,cpp noremap<buffer> <leader>sh :split \| Ouroboros<CR>  " open result in a 
-horizontal split
+autocmd! Filetype c,cpp noremap<buffer> <leader>sv :vsplit \| Ouroboros<CR> " open result in a vertical split
+autocmd! Filetype c,cpp noremap<buffer> <leader>sh :split \| Ouroboros<CR>  " open result in a horizontal split
 ```
 
 *NOTE:* This command _does nothing_ unless used in a file ending in `.cpp`,`.hpp`,`.c` or `.h`.

@@ -22,7 +22,7 @@ Switching between files is as easy as calling:
 I highly suggest binding this to allow quick switching at will:
 >
 	" Example keybinding:
-	noremap <leader>sw :Ouroboros<CR>
+    autocmd! Filetype c,cpp map<buffer> <C-e> :Ouroboros<CR>
 >
 
 Note
