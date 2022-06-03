@@ -15,3 +15,4 @@ EOF
 lua ouroboros = require("ouroboros")
 
 command! -nargs=0 Ouroboros lua ouroboros.list()
+
