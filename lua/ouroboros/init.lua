@@ -40,7 +40,7 @@ function M.list()
             desired_extension = utils.ternary(extension == "cpp", "hpp", "cpp") 
         elseif(extension == "c" or extension == "h") then
             desired_extension = utils.ternary(extension == "c", "h", "c")
-        elseif(extension == "cc")
+        elseif(extension == "cc") then
             desired_extension = "h"
         end
        
@@ -64,7 +64,7 @@ function M.list()
             desired_extension = utils.ternary(desired_extension == "cpp", "c", "h") 
         elseif(desired_extension == "c" or desired_extension == "h") then
             desired_extension = utils.ternary(desired_extension == "c", "cpp", "hpp") 
-        elseif(extension == "cc")
+        elseif(extension == "cc") then
             desired_extension = "hpp"
         end
 
