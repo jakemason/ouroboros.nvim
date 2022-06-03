@@ -35,11 +35,13 @@ function M.list()
     if next(matching_files) ~= nil then
         local desired_extension = nil
         
-        -- First pass searches for exactly hpp <==> cpp, h <==> c
+        -- First pass searches for exactly hpp <==> cpp, h <==> c, cc <==> h
         if(extension == "cpp" or extension == "hpp") then
             desired_extension = utils.ternary(extension == "cpp", "hpp", "cpp") 
         elseif(extension == "c" or extension == "h") then
-            desired_extension = utils.ternary(extension == "c", "h", "c") 
+            desired_extension = utils.ternary(extension == "c", "h", "c")
+        elseif(extension == "cc")
+            desired_extension = "h"
         end
        
         utils.log("Looking for an extension of: " .. desired_extension)
@@ -56,12 +58,14 @@ function M.list()
             end
         end
 
-        -- Second pass searches for h <==> cpp, c <==> hpp
+        -- Second pass searches for h <==> cpp, c <==> hpp, cc <==> hpp
         utils.log("Failed to find a perfect matched_extension counterpart")
         if(desired_extension == "cpp" or desired_extension == "hpp") then
             desired_extension = utils.ternary(desired_extension == "cpp", "c", "h") 
         elseif(desired_extension == "c" or desired_extension == "h") then
             desired_extension = utils.ternary(desired_extension == "c", "cpp", "hpp") 
+        elseif(extension == "cc")
+            desired_extension = "hpp"
         end
 
         utils.log("Now searching for the less likely extension: ." .. desired_extension)
