@@ -14,7 +14,8 @@ function M.list()
     utils.log("Extension: " .. extension)
 
     if((extension ~= "cpp") and (extension ~= "hpp") and
-       (extension ~= "c") and (extension ~= "h")) then
+       (extension ~= "c") and (extension ~= "h") and
+       (extension ~= "cc")) then
         utils.log("Ouroboros doesn't work on a file ending in: ." .. extension .. ". Aborting.")
            return
     end
@@ -64,6 +65,28 @@ function M.list()
             desired_extension = utils.ternary(desired_extension == "cpp", "c", "h") 
         elseif(desired_extension == "c" or desired_extension == "h") then
             desired_extension = utils.ternary(desired_extension == "c", "cpp", "hpp") 
+        end
+
+        utils.log("Now searching for the less likely extension: ." .. desired_extension)
+
+        for index, value in ipairs(matching_files) do
+            local path, matched_filename, matched_extension = utils.split_filename(value)
+
+            utils.log("Potential match: " .. filename .. "." .. matched_extension)
+            if (matched_extension == desired_extension and matched_extension ~= extension) and
+                filename == matched_filename then
+                utils.log("Match found! Executing command: 'edit " .. matching_files[index] .."'")
+                local command_string = "edit " .. matching_files[index]
+                vim.cmd(command_string)
+                return
+            end
+        end
+
+
+        -- Third pass searches for cc <==> hpp, h
+        utils.log("Failed to find a perfect matched_extension counterpart")
+        if(desired_extension == "c" or desired_extension == "cpp") then
+            desired_extension = "cc"
         elseif(extension == "cc") then
             desired_extension = "hpp"
         end
@@ -83,6 +106,8 @@ function M.list()
             end
         end
 
+
+        -- Failed to find any matches, report this as a problem even when not in debug mode
         print("Ouroboros failed to find matching files for " .. filename .. "." .. extension)
     end
     return matching_files
