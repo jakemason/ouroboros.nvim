@@ -14,7 +14,7 @@ end
 
 -- Returns the Path, Filename, and Extension as 3 values
 function M.split_filename(file)
-    local path, filename, extension = string.match(file, "(.-)([^\\]-)([^\\%.]+)$")
+    local path, filename, extension = string.match(file, "(.-)([^\\/]-)([^\\/%.]+)$")
 
     -- pop the "." off the end of the filename - wouldn't need if my regex were better
     filename = filename:sub(1,-2)
