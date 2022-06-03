@@ -46,4 +46,20 @@ function M.dump(arr, indentLevel)
     return str
 end
 
+function M.find(matching_files, filename, extension, desired_extension)
+    for index, value in ipairs(matching_files) do
+        local path, matched_filename, matched_extension = utils.split_filename(value)
+
+        utils.log("Potential match: " .. filename .. "." .. matched_extension)
+        if (matched_extension == desired_extension and matched_extension ~= extension) and
+             filename == matched_filename then
+            utils.log("Match found! Executing command: 'edit " .. matching_files[index] .."'")
+            local command_string = "edit " .. matching_files[index]
+            vim.cmd(command_string)
+            return true
+        end
+    end
+    return false
+end
+
 return M

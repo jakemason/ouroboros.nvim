@@ -1,10 +1,9 @@
 local scan = require("plenary.scandir")
-local utils = require("ouroboros.utils")
+utils = require("ouroboros.utils")
 
 local M = {}
 
 function M.list()
-
     local current_file = vim.api.nvim_eval('expand("%:p")')
     local path, filename, extension = utils.split_filename(current_file)
 
@@ -46,18 +45,8 @@ function M.list()
         end
        
         utils.log("Looking for an extension of: " .. desired_extension)
-
-        for index, value in ipairs(matching_files) do
-            local path, matched_filename, matched_extension = utils.split_filename(value)
-            utils.log("Potential match: " .. filename .. "." .. matched_extension)
-            if (matched_extension == desired_extension and matched_extension ~= extension) and
-                filename == matched_filename then
-                utils.log("Match found! Executing command: 'edit " .. matching_files[index] .."'")
-                local command_string = "edit " .. matching_files[index]
-                vim.cmd(command_string)
-                return
-            end
-        end
+        local found_match = utils.find(matching_files, filename, extension, desired_extension)
+        if(found_match) then return end
 
         -- Second pass searches for h <==> cpp, c <==> hpp, cc <==> hpp
         utils.log("Failed to find a perfect matched_extension counterpart")
@@ -68,20 +57,8 @@ function M.list()
         end
 
         utils.log("Now searching for the less likely extension: ." .. desired_extension)
-
-        for index, value in ipairs(matching_files) do
-            local path, matched_filename, matched_extension = utils.split_filename(value)
-
-            utils.log("Potential match: " .. filename .. "." .. matched_extension)
-            if (matched_extension == desired_extension and matched_extension ~= extension) and
-                filename == matched_filename then
-                utils.log("Match found! Executing command: 'edit " .. matching_files[index] .."'")
-                local command_string = "edit " .. matching_files[index]
-                vim.cmd(command_string)
-                return
-            end
-        end
-
+        local found_match = utils.find(matching_files, filename, extension, desired_extension)
+        if(found_match) then return end
 
         -- Third pass searches for cc <==> hpp, h
         utils.log("Failed to find a perfect matched_extension counterpart")
@@ -92,20 +69,8 @@ function M.list()
         end
 
         utils.log("Now searching for the less likely extension: ." .. desired_extension)
-
-        for index, value in ipairs(matching_files) do
-            local path, matched_filename, matched_extension = utils.split_filename(value)
-
-            utils.log("Potential match: " .. filename .. "." .. matched_extension)
-            if (matched_extension == desired_extension and matched_extension ~= extension) and
-                filename == matched_filename then
-                utils.log("Match found! Executing command: 'edit " .. matching_files[index] .."'")
-                local command_string = "edit " .. matching_files[index]
-                vim.cmd(command_string)
-                return
-            end
-        end
-
+        local found_match = utils.find(matching_files, filename, extension, desired_extension)
+        if(found_match) then return end
 
         -- Failed to find any matches, report this as a problem even when not in debug mode
         print("Ouroboros failed to find matching files for " .. filename .. "." .. extension)
