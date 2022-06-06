@@ -45,6 +45,13 @@ autocmd! Filetype c,cpp noremap<buffer> <leader>sv :vsplit \| Ouroboros<CR> " op
 autocmd! Filetype c,cpp noremap<buffer> <leader>sh :split \| Ouroboros<CR>  " open result in a horizontal split
 ```
 
+### Example:
+![Example of switching between files](./repo/demo.gif)
+*Manual typing of the command, followed by invoking it quickly via keystroke. This .gif is captured
+at 7FPS, so it'll be a lot smoother on your machine.*
+
+---
+
 *NOTE:* This command _does nothing_ unless used in a file ending in `.cpp`,`.hpp`,`.c` or `.h`.
 Invoking Ouroboros in a file with a different extension will do nothing.
 
