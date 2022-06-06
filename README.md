@@ -44,6 +44,9 @@ noremap <leader>sv :vsplit \| Ouroboros<CR> " open result in a vertical split
 noremap <leader>sh :split \| Ouroboros<CR>  " open result in a horizontal split
 ```
 
+### Example:
+![Example of switching between files](./repo/demo.gif)
+
 *NOTE:* This command _does nothing_ unless used in a file ending in `.cpp`,`.hpp`,`.c` or `.h`.
 Invoking Ouroboros in a file with a different extension will do nothing.
 
