@@ -1,4 +1,4 @@
-![Ouroboros](./repo/logo.png)
+![Ouroboro](./repo/logo.png)
 
 A Neovim plugin that makes switching between header & implementation files in `C/C++` quick and painless.
 
@@ -45,7 +45,7 @@ autocmd! Filetype c,cpp noremap<buffer> <leader>sv :vsplit \| Ouroboros<CR> " op
 autocmd! Filetype c,cpp noremap<buffer> <leader>sh :split \| Ouroboros<CR>  " open result in a horizontal split
 ```
 
-_If you're getting an "E492: Not an editor command: Ouroboros", make sure you're in a file with the
+_:warning: If you're getting an "E492: Not an editor command: Ouroboros", make sure you're in a file with the
 filetype of c or cpp._
 
 ### Example:
@@ -55,7 +55,7 @@ at 7FPS, so it'll be a lot smoother on your machine.*
 
 ---
 
-*NOTE:* This command _does nothing_ unless used in a file ending in `.cpp`,`.hpp`,`.c` or `.h`.
+*:warning: NOTE:* This command _does nothing_ unless used in a file ending in `.cpp`,`.hpp`,`.c` or `.h`.
 Invoking Ouroboros in a file with a different extension will do nothing.
 
 After the `Ouroboros` command is invoked, your working directory will be recursively searched until
