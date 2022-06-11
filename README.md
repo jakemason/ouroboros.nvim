@@ -45,6 +45,9 @@ autocmd! Filetype c,cpp noremap<buffer> <leader>sv :vsplit \| Ouroboros<CR> " op
 autocmd! Filetype c,cpp noremap<buffer> <leader>sh :split \| Ouroboros<CR>  " open result in a horizontal split
 ```
 
+_If you're getting an "E492: Not an editor command: Ouroboros", make sure you're in a file with the
+filetype of c or cpp._
+
 ### Example:
 ![Example of switching between files](./repo/demo.gif)
 *Manual typing of the command, followed by invoking it quickly via keystroke. This .gif is captured

@@ -3,7 +3,7 @@ utils = require("ouroboros.utils")
 
 local M = {}
 
-function M.list()
+function M.switch()
     local current_file = vim.api.nvim_eval('expand("%:p")')
     local path, filename, extension = utils.split_filename(current_file)
 

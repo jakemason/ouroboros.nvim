@@ -1,7 +1,3 @@
-if exists("g:loaded_ouroboros")
-    finish
-endif
-let g:loaded_ouroboros = 1
 let g:ouroboros_debug = get(g:, 'ouroboros_debug', 0)
 
 " This forces a reload of the plugin when we source it.
@@ -14,5 +10,5 @@ EOF
 
 lua ouroboros = require("ouroboros")
 
-command! -nargs=0 Ouroboros lua ouroboros.list()
+command! -buffer -nargs=0 Ouroboros lua ouroboros.switch()
 
