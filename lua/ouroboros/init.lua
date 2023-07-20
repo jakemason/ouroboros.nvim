@@ -34,6 +34,7 @@ function M.switch()
     -- if our results table isn't empty
     if next(matching_files) ~= nil then
         local desired_extension = nil
+        local first_priority = nil
         
         -- First pass searches for exactly hpp <==> cpp, h <==> c, cc <==> h
         if(extension == "cpp" or extension == "hpp") then
@@ -43,6 +44,8 @@ function M.switch()
         elseif(extension == "cc") then
             desired_extension = "h"
         end
+
+        first_priority = desired_extension
        
         utils.log("Looking for an extension of: " .. desired_extension)
         local found_match = utils.find(matching_files, filename, extension, desired_extension)
@@ -72,8 +75,19 @@ function M.switch()
         local found_match = utils.find(matching_files, filename, extension, desired_extension)
         if(found_match) then return end
 
-        -- Failed to find any matches, report this as a problem even when not in debug mode
-        print("Ouroboros failed to find matching files for " .. filename .. "." .. extension)
+        -- Failed to find any matches, report this as a problem even when not in debug mode and
+        -- offer the user an opportunity to create the file
+        local could_create_at = path .. filename .. "." .. first_priority
+        vim.ui.input({prompt = "Failed to find a matching file, would you like to create at: ", default = could_create_at}, function(input)
+          if (input == nil) then
+            return false
+          else
+            local path, filename, extension = utils.split_filename(input)
+            vim.fn.mkdir(path, "-p")
+            vim.cmd("edit " .. input)
+            return true
+          end
+        end)
     end
     return matching_files
 end
