@@ -45,8 +45,9 @@ autocmd! Filetype c,cpp noremap<buffer> <leader>sv :vsplit \| Ouroboros<CR> " op
 autocmd! Filetype c,cpp noremap<buffer> <leader>sh :split \| Ouroboros<CR>  " open result in a horizontal split
 ```
 
-_:warning: If you're getting an "E492: Not an editor command: Ouroboros", make sure you're in a file with the
-filetype of c or cpp._
+If a matching file isn't found, you'll be prompted to create one in the same directory as the file you called
+Ouroboros from. You can optionally edit the path and name, hitting enter to create the file and open it, or 
+cancel and skip file creation entirely.
 
 ### Example:
 ![Example of switching between files](./repo/demo.gif)
