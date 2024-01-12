@@ -83,7 +83,7 @@ function M.switch()
             return false
           else
             local path, filename, extension = utils.split_filename(input)
-            vim.fn.mkdir(path, "-p")
+            vim.fn.mkdir(path, "p")
             vim.cmd("edit " .. input)
             return true
           end
