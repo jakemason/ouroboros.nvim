@@ -1,1 +1,1 @@
-runtime ./c.vim
+runtime! shared/ouroboros_config.vim
