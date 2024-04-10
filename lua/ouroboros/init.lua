@@ -4,6 +4,12 @@ config = require("ouroboros.config")
 
 local M = {}
 
+-- needs to be exposed on the "main" plugin level then
+-- we can defer to the functionality to config itself
+function M.setup(user_settings)
+  config.setup(user_settings)
+end
+
 function M.switch()
     local current_file = vim.api.nvim_eval('expand("%:p")')
     local path, filename, current_file_extension = utils.split_filename(current_file)
@@ -53,6 +59,8 @@ function M.switch()
 
         found_match = scores[1].score >= config.settings.score_required_to_be_confident_match_is_found
 
+        -- If we're confident enough we've found the file's counterpart, then we just start editing
+        -- that file
         if(found_match) then 
             local match = scores[1].path;
             utils.log("Match path: " .. match);
