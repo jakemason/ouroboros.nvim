@@ -1,14 +1,8 @@
 local scan = require("plenary.scandir")
 utils = require("ouroboros.utils")
+config = require("ouroboros.config")
 
 local M = {}
-
-local extension_preferences = {
-    c = {h = 2, hpp = 1},
-    h = {c = 2, cpp = 1},
-    cpp = {hpp = 2, h = 1},
-    hpp = {cpp = 1, c = 2},
-}
 
 function M.switch()
     local current_file = vim.api.nvim_eval('expand("%:p")')
@@ -19,7 +13,7 @@ function M.switch()
     utils.log("Filename: " .. filename)
     utils.log("current_file_extension: " .. current_file_extension)
 
-    if(utils.find_highest_preference(current_file_extension, extension_preferences) == nil) then
+    if(utils.find_highest_preference(current_file_extension) == nil) then
         utils.log("Ouroboros doesn't work on a file ending in: ." .. current_file_extension .. ". Aborting.")
            return
     end
@@ -42,7 +36,7 @@ function M.switch()
        local scores = {}
         for _, file_path in ipairs(matching_files) do
             local _, _, file_extension = utils.split_filename(file_path)
-            local score = utils.calculate_final_score(current_file, file_path, current_file_extension, file_extension, extension_preferences)
+            local score = utils.calculate_final_score(current_file, file_path, current_file_extension, file_extension)
             table.insert(scores, {path = file_path, score = score})
         end
 
@@ -57,7 +51,7 @@ function M.switch()
           utils.log(string.format("File: %s, Score: %s", item.path, item.score))
         end
 
-        found_match = scores[1].score >= extension_score_weight
+        found_match = scores[1].score >= config.settings.score_required_to_be_confident_match_is_found
 
         if(found_match) then 
             local match = scores[1].path;
@@ -68,7 +62,7 @@ function M.switch()
         else
           -- Failed to find any matches, report this as a problem even when not in debug mode and
           -- offer the user an opportunity to create the file
-          local could_create_at = path .. filename .. "." .. utils.find_highest_preference(current_file_extension, extension_preferences)
+          local could_create_at = path .. filename .. "." .. utils.find_highest_preference(current_file_extension)
           vim.ui.input({prompt = "Failed to find a matching file, would you like to create at: ", default = could_create_at}, function(input)
             if (input == nil) then
               return false

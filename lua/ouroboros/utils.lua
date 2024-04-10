@@ -1,3 +1,5 @@
+config = require("ouroboros.config")
+
 local M = {}
 
 -- logs info to :messages if ouroboros_debug is true
@@ -48,8 +50,8 @@ function M.calculate_similarity(path1, path2)
     return count
 end
 
-function M.find_highest_preference(extension, preferences_table)
-    local preferences = preferences_table[extension]
+function M.find_highest_preference(extension)
+    local preferences = config.settings.extension_preferences_table[extension]
 
     if not preferences or next(preferences) == nil then
         return nil 
@@ -67,18 +69,18 @@ function M.find_highest_preference(extension, preferences_table)
     return preferred_extension, highest_score
 end
 
-function M.get_extension_score(current_extension, file_extension, extension_preferences_table)
+function M.get_extension_score(current_extension, file_extension)
     M.log(string.format("current_extension [%s], file_extension [%s]", current_extension, file_extension))
-    local preferences = extension_preferences_table[current_extension] or {}
+    local preferences = config.settings.extension_preferences_table[current_extension] or {}
 
     M.log(string.format("preferences[file_extension] = [%s]", preferences[file_extension]))
     return preferences[file_extension] or 0
 end
 
-function M.calculate_final_score(path1, path2, current_extension, file_extension, extension_preferences_table)
+function M.calculate_final_score(path1, path2, current_extension, file_extension)
     local path_similarity = M.calculate_similarity(path1, path2)
     local extension_score_weight = 10
-    local extension_score = M.get_extension_score(current_extension, file_extension, extension_preferences_table) * extension_score_weight
+    local extension_score = M.get_extension_score(current_extension, file_extension) * extension_score_weight
    
     M.log(string.format("Path similarity: %s, Extension score: %d", path_similarity, extension_score))
     return path_similarity + extension_score
