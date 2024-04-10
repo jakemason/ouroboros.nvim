@@ -1,3 +1,5 @@
+config = require("ouroboros.config")
+
 local M = {}
 
 -- logs info to :messages if ouroboros_debug is true
@@ -22,44 +24,66 @@ function M.split_filename(file)
     return path, filename, extension
 end
 
--- prints out tables similar to var_dump() 
-function M.dump(arr, indentLevel)
-    local str = ""
-    local indentStr = "#"
-
-    if(indentLevel == nil) then
-        print(print_r(arr, 0))
-        return
+function M.split_path_into_directories(path)
+    local dirs = {}
+    local sep = package.config:sub(1,1) -- Get the directory separator from package.config for current OS
+    for dir in path:gmatch("([^" .. sep .. "]+)") do
+        table.insert(dirs, dir)
     end
-
-    for i = 0, indentLevel do
-        indentStr = indentStr.."\t"
-    end
-
-    for index,value in pairs(arr) do
-        if type(value) == "table" then
-            str = str..indentStr..index..": \n"..print_r(value, (indentLevel + 1))
-        else 
-            str = str..indentStr..index..": "..value.."\n"
-        end
-    end
-    return str
+    return dirs
 end
 
-function M.find(matching_files, filename, extension, desired_extension)
-    for index, value in ipairs(matching_files) do
-        local path, matched_filename, matched_extension = utils.split_filename(value)
+function M.calculate_similarity(path1, path2)
+    local dirs1 = M.split_path_into_directories(path1)
+    local dirs2 = M.split_path_into_directories(path2)
 
-        utils.log("Potential match: " .. filename .. "." .. matched_extension)
-        if (matched_extension == desired_extension and matched_extension ~= extension) and
-             filename == matched_filename then
-            utils.log("Match found! Executing command: 'edit " .. matching_files[index] .."'")
-            local command_string = "edit " .. matching_files[index]
-            vim.cmd(command_string)
-            return true
+    local count = 0
+    local length1 = #dirs1
+    local length2 = #dirs2
+    -- Start comparing from the last element (closest to the file name) backwards
+    for i = 0, math.min(length1, length2) - 1 do
+        if dirs1[length1 - i] == dirs2[length2 - i] then
+            count = count + 1
         end
     end
-    return false
+    M.log(string.format("Path 1: %s, Path 2: %s, Score %d", path1, path2, count))
+    return count
+end
+
+function M.find_highest_preference(extension)
+    local preferences = config.settings.extension_preferences_table[extension]
+
+    if not preferences or next(preferences) == nil then
+        return nil 
+    end
+
+    local highest_score = 0
+    local preferred_extension = nil
+    for ext, score in pairs(preferences) do
+        if score > highest_score then
+            highest_score = score
+            preferred_extension = ext
+        end
+    end
+
+    return preferred_extension, highest_score
+end
+
+function M.get_extension_score(current_extension, file_extension)
+    M.log(string.format("current_extension [%s], file_extension [%s]", current_extension, file_extension))
+    local preferences = config.settings.extension_preferences_table[current_extension] or {}
+
+    M.log(string.format("preferences[file_extension] = [%s]", preferences[file_extension]))
+    return preferences[file_extension] or 0
+end
+
+function M.calculate_final_score(path1, path2, current_extension, file_extension)
+    local path_similarity = M.calculate_similarity(path1, path2)
+    local extension_score_weight = 10
+    local extension_score = M.get_extension_score(current_extension, file_extension) * extension_score_weight
+   
+    M.log(string.format("Path similarity: %s, Extension score: %d", path_similarity, extension_score))
+    return path_similarity + extension_score
 end
 
 return M
