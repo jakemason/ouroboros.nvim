@@ -40,7 +40,7 @@ require('ouroboros').setup({
 })
 ```
 
-If you don't the defaults above will be used anyway. Thus, according to the table above, a file ending in ".c"
+If you don't call setup explicitly, the defaults above will be used. Thus, according to the table above, a file ending in ".c"
 will first look for a file ending in ".h" (weight of 2) before it looks for a match of ".hpp" (weight of 1).
 
 You can get all of this information in the editor by running `:help ouroboros`.
