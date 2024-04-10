@@ -3,19 +3,24 @@ utils = require("ouroboros.utils")
 
 local M = {}
 
+local extension_preferences = {
+    c = {h = 2, hpp = 1},
+    h = {c = 2, cpp = 1},
+    cpp = {hpp = 2, h = 1},
+    hpp = {cpp = 1, c = 2},
+}
+
 function M.switch()
     local current_file = vim.api.nvim_eval('expand("%:p")')
-    local path, filename, extension = utils.split_filename(current_file)
+    local path, filename, current_file_extension = utils.split_filename(current_file)
 
     utils.log("Currently working with:")
     utils.log("Full Path: " .. path)
     utils.log("Filename: " .. filename)
-    utils.log("Extension: " .. extension)
+    utils.log("current_file_extension: " .. current_file_extension)
 
-    if((extension ~= "cpp") and (extension ~= "hpp") and
-       (extension ~= "c") and (extension ~= "h") and
-       (extension ~= "cc")) then
-        utils.log("Ouroboros doesn't work on a file ending in: ." .. extension .. ". Aborting.")
+    if(utils.find_highest_preference(current_file_extension, extension_preferences) == nil) then
+        utils.log("Ouroboros doesn't work on a file ending in: ." .. current_file_extension .. ". Aborting.")
            return
     end
 
@@ -31,65 +36,52 @@ function M.switch()
 
     local next = next -- This is just an efficiency trick in Lua 
                       -- to quickly evaluate if a table is empty
+                      
     -- if our results table isn't empty
     if next(matching_files) ~= nil then
-        local desired_extension = nil
-        local first_priority = nil
-        
-        -- First pass searches for exactly hpp <==> cpp, h <==> c, cc <==> h
-        if(extension == "cpp" or extension == "hpp") then
-            desired_extension = utils.ternary(extension == "cpp", "hpp", "cpp") 
-        elseif(extension == "c" or extension == "h") then
-            desired_extension = utils.ternary(extension == "c", "h", "c")
-        elseif(extension == "cc") then
-            desired_extension = "h"
+       local scores = {}
+        for _, file_path in ipairs(matching_files) do
+            local _, _, file_extension = utils.split_filename(file_path)
+            local score = utils.calculate_final_score(current_file, file_path, current_file_extension, file_extension, extension_preferences)
+            table.insert(scores, {path = file_path, score = score})
         end
 
-        first_priority = desired_extension
-       
-        utils.log("Looking for an extension of: " .. desired_extension)
-        local found_match = utils.find(matching_files, filename, extension, desired_extension)
-        if(found_match) then return end
+        table.sort(scores, function(a, b) return a.score > b.score end)
 
-        -- Second pass searches for h <==> cpp, c <==> hpp, cc <==> hpp
-        utils.log("Failed to find a perfect matched_extension counterpart")
-        if(desired_extension == "cpp" or desired_extension == "hpp") then
-            desired_extension = utils.ternary(desired_extension == "cpp", "c", "h") 
-        elseif(desired_extension == "c" or desired_extension == "h") then
-            desired_extension = utils.ternary(desired_extension == "c", "cpp", "hpp") 
+        local sorted_matching_files = {}
+        for _, item in ipairs(scores) do
+            table.insert(sorted_matching_files, item.path)
         end
 
-        utils.log("Now searching for the less likely extension: ." .. desired_extension)
-        local found_match = utils.find(matching_files, filename, extension, desired_extension)
-        if(found_match) then return end
-
-        -- Third pass searches for cc <==> hpp, h
-        utils.log("Failed to find a perfect matched_extension counterpart")
-        if(desired_extension == "c" or desired_extension == "cpp") then
-            desired_extension = "cc"
-        elseif(extension == "cc") then
-            desired_extension = "hpp"
+        for _, item in ipairs(scores) do
+          utils.log(string.format("File: %s, Score: %s", item.path, item.score))
         end
 
-        utils.log("Now searching for the less likely extension: ." .. desired_extension)
-        local found_match = utils.find(matching_files, filename, extension, desired_extension)
-        if(found_match) then return end
+        found_match = scores[1].score >= extension_score_weight
 
-        -- Failed to find any matches, report this as a problem even when not in debug mode and
-        -- offer the user an opportunity to create the file
-        local could_create_at = path .. filename .. "." .. first_priority
-        vim.ui.input({prompt = "Failed to find a matching file, would you like to create at: ", default = could_create_at}, function(input)
-          if (input == nil) then
-            return false
-          else
-            local path, filename, extension = utils.split_filename(input)
-            vim.fn.mkdir(path, "p")
-            vim.cmd("edit " .. input)
-            return true
-          end
-        end)
+        if(found_match) then 
+            local match = scores[1].path;
+            utils.log("Match path: " .. match);
+            utils.log("Match found! Executing command: 'edit " .. match .."'")
+            local command_string = "edit " .. match
+            vim.cmd(command_string)
+        else
+          -- Failed to find any matches, report this as a problem even when not in debug mode and
+          -- offer the user an opportunity to create the file
+          local could_create_at = path .. filename .. "." .. utils.find_highest_preference(current_file_extension, extension_preferences)
+          vim.ui.input({prompt = "Failed to find a matching file, would you like to create at: ", default = could_create_at}, function(input)
+            if (input == nil) then
+              return false
+            else
+              local path, filename, extension = utils.split_filename(input)
+              vim.fn.mkdir(path, "p")
+              vim.cmd("edit " .. input)
+              return true
+            end
+          end)
+        end
     end
-    return matching_files
+    return sorted_matching_files
 end
 
 return M
