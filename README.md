@@ -26,6 +26,23 @@ use {
 
 You can run `:checkhealth` to verify the plugin and dependencies are installed correctly.
 
+Then you can set custom weights for file extension preference matching if you'd like:
+
+```lua
+require('ouroboros').setup({
+    -- these are the defaults
+    extension_preferences_table = {
+          c = {h = 2, hpp = 1},
+          h = {c = 2, cpp = 1},
+          cpp = {hpp = 2, h = 1},
+          hpp = {cpp = 1, c = 2},
+    }
+})
+```
+
+If you don't the defaults above will be used anyway. Thus, according to the table above, a file ending in ".c"
+will first look for a file ending in ".h" (weight of 2) before it looks for a match of ".hpp" (weight of 1).
+
 You can get all of this information in the editor by running `:help ouroboros`.
 
 ## Usage
