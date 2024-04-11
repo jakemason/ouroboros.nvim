@@ -50,6 +50,27 @@ function M.calculate_similarity(path1, path2)
     return count
 end
 
+function M.switch_to_open_file_if_possible(file_path)
+    if not config.settings.switch_to_open_pane_if_possible then
+      return false
+    end
+
+    local windows = vim.api.nvim_list_wins()
+    -- Normalize the target file path to be absolute
+    local absolute_file_path = vim.fn.fnamemodify(file_path, ":p")
+    for _, win in ipairs(windows) do
+        local buf = vim.api.nvim_win_get_buf(win)
+        local buf_path = vim.api.nvim_buf_get_name(buf)
+        -- Normalize the buffer file path to be absolute
+        local absolute_buf_path = vim.fn.fnamemodify(buf_path, ":p")
+        if absolute_buf_path == absolute_file_path then
+            vim.api.nvim_set_current_win(win)
+            return true
+        end
+    end
+    return false 
+end
+
 function M.find_highest_preference(extension)
     local preferences = config.settings.extension_preferences_table[extension]
 

@@ -63,10 +63,13 @@ function M.switch()
         -- that file
         if(found_match) then 
             local match = scores[1].path;
-            utils.log("Match path: " .. match);
-            utils.log("Match found! Executing command: 'edit " .. match .."'")
-            local command_string = "edit " .. match
-            vim.cmd(command_string)
+            if not utils.switch_to_open_file_if_possible(match) then
+                 -- If the file wasn't open in any window, open it in the current window
+                 utils.log("Match found! Executing command: 'edit " .. match .. "'")
+                 vim.cmd("edit " .. match)
+             else
+                 utils.log("Switched to already open file.")
+             end
         else
           -- Failed to find any matches, report this as a problem even when not in debug mode and
           -- offer the user an opportunity to create the file

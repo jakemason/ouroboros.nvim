@@ -6,6 +6,9 @@ local config = {
             cpp = {hpp = 2, h = 1},
             hpp = {cpp = 1, c = 2},
         },
+        -- if this is true and the matching file is already open in a pane, we'll
+        -- switch to that pane instead of opening it in the current buffer
+        switch_to_open_pane_if_possible = false,
         -- this number may need to be tweaked, will need to test drive
         -- for a while and see
         score_required_to_be_confident_match_is_found = 10
