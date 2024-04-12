@@ -71,6 +71,7 @@ cancel and skip file creation entirely.
 
 ### Example:
 ![Example of switching between files](./repo/demo.gif)
+
 *Manual typing of the command, followed by invoking it quickly via keystroke. This .gif is captured
 at 7FPS, so it'll be a lot smoother on your machine.*
 
