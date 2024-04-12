@@ -76,9 +76,6 @@ at 7FPS, so it'll be a lot smoother on your machine.*
 
 ---
 
-*:warning: NOTE:* This command _does not work_ unless used in a file ending in `.cpp`,`.hpp`,`.c` or `.h`.
-Invoking Ouroboros in a file with a different extension will produce an Error - 492.
-
 After the `Ouroboros` command is invoked, your working directory will be recursively searched until
 a file matching the _same name_ with the _counterpart_ extension is discovered. Note that the
 search also respects your `.gitignore` if one exists and any file ignored in `git` will be ignored
