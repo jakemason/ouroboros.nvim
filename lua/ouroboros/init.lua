@@ -36,8 +36,12 @@ function M.switch()
 
     -- check cache to see if the file was already found once
     if dict[filename .. current_file_extension] then
-        found_match = true
-        match = dict[filename .. current_file_extension]
+        local file = io.open(dict[filename .. current_file_extension], 'r')
+        -- check if file wasn't moved or deleted under our feet
+        if file ~= nil then
+            found_match = true
+            match = dict[filename .. current_file_extension]
+        end
     end
 
     -- only do search logic if we did not already find a match earlier
