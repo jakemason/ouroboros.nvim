@@ -45,6 +45,7 @@ function M.switch()
     end
 
     -- only do search logic if we did not already find a match earlier
+
     if not found_match then
         -- these are our scan options, refer to plenary.scan_dir for the options available here
         local scan_opts = {
@@ -53,35 +54,39 @@ function M.switch()
             search_pattern = "^.*" .. filename .. "%..*$";
         }
 
+        -- search 1) in the same path as the original file, and then 2) in the project tree if we still haven't found a match
+        for _, p in ipairs({path, '.'}) do
         -- look for files that meet our above criteria
-        local matching_files = scan.scan_dir('.', scan_opts)
+            local matching_files = scan.scan_dir(p, scan_opts)
 
-        local next = next -- This is just an efficiency trick in Lua 
-        -- to quickly evaluate if a table is empty
+            local next = next -- This is just an efficiency trick in Lua 
+            -- to quickly evaluate if a table is empty
 
-        -- if our results table isn't empty
-        if next(matching_files) ~= nil then
-            for _, file_path in ipairs(matching_files) do
-                local _, _, file_extension = utils.split_filename(file_path)
-                local score = utils.calculate_final_score(current_file, file_path, current_file_extension, file_extension)
-                table.insert(scores, {path = file_path, score = score})
-            end
+            -- if our results table isn't empty
+            if next(matching_files) ~= nil then
+                for _, file_path in ipairs(matching_files) do
+                    local _, _, file_extension = utils.split_filename(file_path)
+                    local score = utils.calculate_final_score(current_file, file_path, current_file_extension, file_extension)
+                    table.insert(scores, {path = file_path, score = score})
+                end
 
-            table.sort(scores, function(a, b) return a.score > b.score end)
+                table.sort(scores, function(a, b) return a.score > b.score end)
 
-            for _, item in ipairs(scores) do
-                table.insert(sorted_matching_files, item.path)
-            end
+                for _, item in ipairs(scores) do
+                    table.insert(sorted_matching_files, item.path)
+                end
 
-            for _, item in ipairs(scores) do
-                utils.log(string.format("File: %s, Score: %s", item.path, item.score))
-            end
+                for _, item in ipairs(scores) do
+                    utils.log(string.format("File: %s, Score: %s", item.path, item.score))
+                end
 
-            found_match = scores[1].score >= config.settings.score_required_to_be_confident_match_is_found
-            if found_match then
-                match = scores[1].path
-                -- store found file 
-                dict[filename .. current_file_extension] = match
+                found_match = scores[1].score >= config.settings.score_required_to_be_confident_match_is_found
+                if found_match then
+                    match = scores[1].path
+                    -- store found file 
+                    dict[filename .. current_file_extension] = match
+                    break
+                end
             end
         end
     end
