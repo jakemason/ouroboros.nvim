@@ -45,7 +45,6 @@ function M.switch()
     end
 
     -- only do search logic if we did not already find a match earlier
-
     if not found_match then
         -- these are our scan options, refer to plenary.scan_dir for the options available here
         local scan_opts = {
