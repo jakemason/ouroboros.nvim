@@ -106,7 +106,10 @@ function M.switch()
             else
                 local path, filename, extension = utils.split_filename(input)
                 vim.fn.mkdir(path, "p")
-                vim.cmd("edit " .. input)
+                local fname = input
+                vim.cmd("edit " .. fname)
+                -- store created file 
+                dict[filename .. current_file_extension] = fname
                 return true
             end
         end)
