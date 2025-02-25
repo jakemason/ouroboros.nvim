@@ -90,6 +90,25 @@ function M.find_highest_preference(extension)
     return preferred_extension, highest_score
 end
 
+function M.get_filename_score(path1, path2)
+    -- We take the filename into account because otherwise we could sometimes open the wrong
+    -- file if there were a similarly named file that came first alphabetically. Consider the case:
+    --
+    --      MyDirectory/Child/ArguablyMyFile.hpp
+    --      MyDirectory/Child/ArguablyMyFile.cpp
+    --      MyDirectory/Child/MyFile.hpp
+    --      MyDirectory/Child/MyFile.cpp
+    --
+    -- Without taking filename into account, calling :Ouroboros from within MyFile.(c/h)pp would
+    -- open ArguablyMyFile.(c/h)pp as we did not weight the filename at all, only the path to it.
+    local _path1, filename1, _ext1 = M.split_filename(path1)
+    local _path2, filename2, _ext2 = M.split_filename(path2)
+
+    -- For now, I think we can just "add one" if the filename is an exact match and that's been good
+    -- enough as a tiebreaker in every case I've seen so far.
+    return (filename1 == filename2 and 1 or 0)
+end
+
 function M.get_extension_score(current_extension, file_extension)
     M.log(string.format("current_extension [%s], file_extension [%s]", current_extension, file_extension))
     local preferences = config.settings.extension_preferences_table[current_extension] or {}
@@ -102,9 +121,18 @@ function M.calculate_final_score(path1, path2, current_extension, file_extension
     local path_similarity = M.calculate_similarity(path1, path2)
     local extension_score_weight = 10
     local extension_score = M.get_extension_score(current_extension, file_extension) * extension_score_weight
+    local filename_score = M.get_filename_score(path1, path2)
+
    
-    M.log(string.format("Path similarity: %s, Extension score: %d", path_similarity, extension_score))
-    return path_similarity + extension_score
+    M.log(
+      string.format("Path similarity: %s, Extension score: %d, Filename score: %d", 
+                      path_similarity, 
+                      extension_score, 
+                      filename_score
+                    )
+    )
+
+    return path_similarity + extension_score + filename_score
 end
 
 return M
