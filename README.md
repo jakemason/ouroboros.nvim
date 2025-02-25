@@ -32,6 +32,8 @@ Then you can set custom weights for file extension preference matching if you'd 
 -- these are the defaults, customize as desired
 require('ouroboros').setup({
     extension_preferences_table = {
+          -- Higher numbers are a heavier weight and thus preferred.
+          -- In the following, .c would prefer to open .h before .hpp
           c = {h = 2, hpp = 1},
           h = {c = 2, cpp = 1},
           cpp = {hpp = 2, h = 1},
