@@ -4,7 +4,7 @@ local config = {
             c = {h = 2, hpp = 1},
             h = {c = 2, cpp = 1},
             cpp = {hpp = 2, h = 1},
-            hpp = {cpp = 1, c = 2},
+            hpp = {cpp = 2, c = 1},
         },
         -- if this is true and the matching file is already open in a pane, we'll
         -- switch to that pane instead of opening it in the current buffer
