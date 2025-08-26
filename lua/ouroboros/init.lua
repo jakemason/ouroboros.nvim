@@ -64,6 +64,7 @@ function M.switch()
             -- if our results table isn't empty
             if next(matching_files) ~= nil then
                 for _, file_path in ipairs(matching_files) do
+                    file_path = file_path:gsub("//", "/")
                     local _, _, file_extension = utils.split_filename(file_path)
                     local score = utils.calculate_final_score(current_file, file_path, current_file_extension, file_extension)
                     table.insert(scores, {path = file_path, score = score})

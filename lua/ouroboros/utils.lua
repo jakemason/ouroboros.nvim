@@ -118,6 +118,10 @@ function M.get_extension_score(current_extension, file_extension)
 end
 
 function M.calculate_final_score(path1, path2, current_extension, file_extension)
+    if path1 == path2 then
+        return 0
+    end
+
     local path_similarity = M.calculate_similarity(path1, path2)
     local extension_score_weight = 10
     local extension_score = M.get_extension_score(current_extension, file_extension) * extension_score_weight
