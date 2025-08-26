@@ -1,4 +1,11 @@
-local scan = require("plenary.scandir")
+local scan = { unpack(require("plenary.scandir")) }
+scan.scan_dir = function(...)
+	local results = require("plenary.scandir").scan_dir(...)
+	for i, r in ipairs(results) do
+		results[i] = r:gsub("//", "/")
+	end
+	return results
+end
 utils = require("ouroboros.utils")
 config = require("ouroboros.config")
 
@@ -64,7 +71,6 @@ function M.switch()
             -- if our results table isn't empty
             if next(matching_files) ~= nil then
                 for _, file_path in ipairs(matching_files) do
-                    file_path = file_path:gsub("//", "/")
                     local _, _, file_extension = utils.split_filename(file_path)
                     local score = utils.calculate_final_score(current_file, file_path, current_file_extension, file_extension)
                     table.insert(scores, {path = file_path, score = score})
