@@ -16,10 +16,7 @@ end
 
 -- Returns the Path, Filename, and Extension as 3 values
 function M.split_filename(file)
-    local path, filename, extension = string.match(file, "(.-)([^\\/]-)([^\\/%.]+)$")
-
-    -- pop the "." off the end of the filename - wouldn't need if my regex were better
-    filename = filename:sub(1,-2)
+    local path, filename, extension = string.match(file, "(.-)/([^\\/]-)%.([^\\/.]+)$")
 
     return path, filename, extension
 end
@@ -131,8 +128,8 @@ function M.calculate_final_score(path1, path2, current_extension, file_extension
                       filename_score
                     )
     )
-
-    return path_similarity + extension_score + filename_score
+    -- if extension_score is 0, it should not be opened anyway
+    return M.ternary(extension_score == 0, 0, path_similarity + extension_score + filename_score)
 end
 
 return M

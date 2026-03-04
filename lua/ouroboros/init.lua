@@ -103,7 +103,7 @@ function M.switch()
     else
         -- Failed to find any matches, report this as a problem even when not in debug mode and
         -- offer the user an opportunity to create the file
-        local could_create_at = path .. filename .. "." .. utils.find_highest_preference(current_file_extension)
+        local could_create_at = path .. "/" .. filename .. "." .. utils.find_highest_preference(current_file_extension)
         vim.ui.input({prompt = "Failed to find a matching file, would you like to create at: ", default = could_create_at}, function(input)
             if (input == nil) then
                 return false
