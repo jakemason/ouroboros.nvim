@@ -16,7 +16,17 @@ end
 
 -- Returns the Path, Filename, and Extension as 3 values
 function M.split_filename(file)
-    local path, filename, extension = string.match(file, "(.-)/([^\\/]-)%.([^\\/.]+)$")
+    if not file or file == "" then
+        return nil, nil, nil
+    end
+
+    local path, filename, extension =
+        file:match("^(.*)[\\/]([^\\/]-)%.([^\\/.]+)$")
+
+    if not filename then
+        filename, extension = file:match("^([^\\/]-)%.([^\\/.]+)$")
+        path = "."
+    end
 
     return path, filename, extension
 end
