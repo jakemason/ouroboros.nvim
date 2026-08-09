@@ -48,7 +48,7 @@ function M.switch()
     if not found_match then
         -- these are our scan options, refer to plenary.scan_dir for the options available here
         local scan_opts = {
-            respect_gitignore = true,
+			respect_gitignore = config.settings.respect_gitignore,
             -- Starts with anything but explicitly ends in "filename." (note the period is included!) 
             search_pattern = "^.*" .. filename .. "%..*$";
         }

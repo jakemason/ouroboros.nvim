@@ -11,7 +11,9 @@ local config = {
         switch_to_open_pane_if_possible = false,
         -- this number may need to be tweaked, will need to test drive
         -- for a while and see
-        score_required_to_be_confident_match_is_found = 10
+        score_required_to_be_confident_match_is_found = 10,
+
+        respect_gitignore = true,
     }
 }
 
