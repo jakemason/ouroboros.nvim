@@ -84,6 +84,9 @@ function M.switch()
                     match = scores[1].path
                     -- store found file 
                     dict[filename .. current_file_extension] = match
+					-- store reverse navigation
+                    local _, match_filename, match_extension = utils.split_filename(match)
+                    dict[match_filename .. match_extension] = current_file
                     break
                 end
             end
@@ -108,12 +111,18 @@ function M.switch()
             if (input == nil) then
                 return false
             else
-                local path, filename, extension = utils.split_filename(input)
+                local path, new_filename, new_extension = utils.split_filename(input)
+                if new_filename ~= filename then
+                    vim.notify("Changing the filename is not supported", vim.log.levels.ERROR)
+                    return
+                end
                 vim.fn.mkdir(path, "p")
                 local fname = input
                 vim.cmd("edit " .. fname)
-                -- store created file 
+                -- store created file
                 dict[filename .. current_file_extension] = fname
+                -- store reverse navigation
+                dict[filename .. new_extension] = current_file
                 return true
             end
         end)
